@@ -8,6 +8,7 @@ Funcionalidade atual (Prioridade #1):
   com resposta personalizada gerada por IA (Claude).
 """
 import os
+import json
 from flask import Flask, request, jsonify
 
 import storage
@@ -78,97 +79,284 @@ def leads():
 
 @app.route("/painel")
 def painel():
-    """Painel visual simples com leads, perfis do nicho e comentarios."""
+    """Painel visual com indicadores e graficos: leads, perfis do nicho e comentarios."""
     conversas = storage.ler("conversas", {})
     perfis_nicho_dados = storage.ler("perfis_nicho", {})
     comentarios_dados = storage.ler("comentarios", {})
 
+    # ---- indicadores (KPIs) ----
+    total_leads = len(conversas)
+    contagem_classificacao = {"lead_qualificado": 0, "curioso": 0, "sem_interesse": 0}
+    for dados in conversas.values():
+        classificacao = (dados.get("qualificacao") or {}).get("classificacao")
+        if classificacao in contagem_classificacao:
+            contagem_classificacao[classificacao] += 1
+
+    total_perfis_nicho = len(perfis_nicho_dados)
+    perfis_no_nicho = sum(
+        1 for d in perfis_nicho_dados.values()
+        if (d.get("analise") or {}).get("pertence_ao_nicho")
+    )
+
+    total_comentarios = len(comentarios_dados)
+    comentarios_excluidos = sum(1 for d in comentarios_dados.values() if d.get("excluido"))
+    comentarios_respondidos = total_comentarios - comentarios_excluidos
+
+    # ---- linhas das tabelas ----
     linhas_leads = ""
     for dados in conversas.values():
         perfil = dados.get("perfil", {})
         qualificacao = dados.get("qualificacao") or {}
         linhas_leads += (
-            "<tr><td>@%s</td><td>%s</td><td>%s</td><td>%s</td></tr>"
+            "<tr><td>@%s</td><td>%s</td><td><span class='badge badge-%s'>%s</span></td><td>%s</td></tr>"
         ) % (
             perfil.get("username", ""),
             perfil.get("name", ""),
             qualificacao.get("classificacao", ""),
+            qualificacao.get("classificacao", "-"),
             qualificacao.get("resumo", ""),
         )
     if not linhas_leads:
-        linhas_leads = "<tr><td colspan='4'>Nenhum contato ainda.</td></tr>"
+        linhas_leads = "<tr><td colspan='4' class='vazio'>Nenhum contato ainda.</td></tr>"
 
     linhas_nicho = ""
     for dados in perfis_nicho_dados.values():
         perfil = dados.get("perfil", {})
         analise = dados.get("analise") or {}
+        pertence = analise.get("pertence_ao_nicho")
         linhas_nicho += (
-            "<tr><td>@%s</td><td>%s</td><td>%s</td><td>%s</td></tr>"
+            "<tr><td>@%s</td><td><span class='badge badge-%s'>%s</span></td><td>%s</td><td>%s</td></tr>"
         ) % (
             perfil.get("username", ""),
-            "Sim" if analise.get("pertence_ao_nicho") else "Nao",
+            "sim" if pertence else "nao",
+            "Sim" if pertence else "Nao",
             analise.get("categoria", ""),
             analise.get("observacao", ""),
         )
     if not linhas_nicho:
-        linhas_nicho = "<tr><td colspan='4'>Nenhum perfil rastreado ainda.</td></tr>"
+        linhas_nicho = "<tr><td colspan='4' class='vazio'>Nenhum perfil rastreado ainda.</td></tr>"
 
     linhas_comentarios = ""
     for dados in comentarios_dados.values():
         if dados.get("excluido"):
-            status = "Excluido (negativo)"
+            status_classe = "excluido"
+            status_texto = "Excluido (negativo)"
         else:
-            status = "Respondido"
+            status_classe = "respondido"
+            status_texto = "Respondido"
         linhas_comentarios += (
-            "<tr><td>@%s</td><td>%s</td><td>%s</td><td>%s</td></tr>"
+            "<tr><td>@%s</td><td>%s</td><td><span class='badge badge-%s'>%s</span></td><td>%s</td></tr>"
         ) % (
             dados.get("username", ""),
             dados.get("texto", ""),
-            status,
+            status_classe,
+            status_texto,
             dados.get("motivo", ""),
         )
     if not linhas_comentarios:
-        linhas_comentarios = "<tr><td colspan='4'>Nenhum comentario processado ainda.</td></tr>"
+        linhas_comentarios = "<tr><td colspan='4' class='vazio'>Nenhum comentario processado ainda.</td></tr>"
+
+    dados_grafico = {
+        "classificacao": contagem_classificacao,
+        "nicho": {"no_nicho": perfis_no_nicho, "fora_nicho": total_perfis_nicho - perfis_no_nicho},
+        "comentarios": {"respondidos": comentarios_respondidos, "excluidos": comentarios_excluidos},
+    }
 
     html = """
     <html>
       <head>
         <title>Painel - Instagram IA 360</title>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
-          body { font-family: Arial, sans-serif; max-width: 1000px; margin: 30px auto; padding: 0 16px; }
-          h1 { margin-bottom: 4px; }
-          h2 { margin-top: 40px; border-bottom: 2px solid #eee; padding-bottom: 6px; }
-          table { width: 100%%; border-collapse: collapse; margin-top: 10px; }
-          th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 14px; }
-          th { background: #f5f5f5; }
-          tr:nth-child(even) { background: #fafafa; }
+          * { box-sizing: border-box; }
+          body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px 16px 60px;
+            background: #f4f6f9;
+            color: #1f2937;
+          }
+          header h1 { margin: 0; font-size: 28px; }
+          header p { color: #6b7280; margin-top: 4px; }
+
+          .kpis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+          }
+          .kpi {
+            background: #fff;
+            border-radius: 12px;
+            padding: 18px 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+          }
+          .kpi .valor { font-size: 30px; font-weight: 700; }
+          .kpi .label { color: #6b7280; font-size: 13px; margin-top: 4px; }
+          .kpi.azul .valor { color: #2563eb; }
+          .kpi.verde .valor { color: #16a34a; }
+          .kpi.roxo .valor { color: #7c3aed; }
+          .kpi.vermelho .valor { color: #dc2626; }
+
+          .graficos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+          }
+          .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+          }
+          .card h3 { margin: 0 0 12px; font-size: 15px; color: #374151; }
+          .card canvas { max-height: 220px; }
+
+          section h2 {
+            font-size: 18px;
+            margin: 32px 0 12px;
+            color: #111827;
+          }
+          table {
+            width: 100%%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+          }
+          th, td { padding: 10px 12px; text-align: left; font-size: 13px; border-bottom: 1px solid #f0f1f3; }
+          th { background: #f9fafb; color: #6b7280; font-weight: 600; text-transform: uppercase; font-size: 11px; }
+          tr:last-child td { border-bottom: none; }
+          td.vazio { text-align: center; color: #9ca3af; padding: 18px; }
+
+          .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+          }
+          .badge-lead_qualificado { background: #dcfce7; color: #166534; }
+          .badge-curioso { background: #fef3c7; color: #92400e; }
+          .badge-sem_interesse { background: #fee2e2; color: #991b1b; }
+          .badge-sim { background: #dcfce7; color: #166534; }
+          .badge-nao { background: #f3f4f6; color: #6b7280; }
+          .badge-respondido { background: #dbeafe; color: #1e40af; }
+          .badge-excluido { background: #fee2e2; color: #991b1b; }
         </style>
       </head>
       <body>
-        <h1>Instagram IA 360</h1>
-        <p>Painel de acompanhamento do sistema.</p>
+        <header>
+          <h1>Instagram IA 360</h1>
+          <p>Painel de acompanhamento em tempo real.</p>
+        </header>
 
-        <h2>Leads (contatos do Direct)</h2>
-        <table>
-          <tr><th>Perfil</th><th>Nome</th><th>Classificacao</th><th>Resumo</th></tr>
-          %s
-        </table>
+        <div class="kpis">
+          <div class="kpi azul"><div class="valor">%s</div><div class="label">Contatos no Direct</div></div>
+          <div class="kpi verde"><div class="valor">%s</div><div class="label">Leads qualificados</div></div>
+          <div class="kpi roxo"><div class="valor">%s</div><div class="label">Perfis do nicho rastreados</div></div>
+          <div class="kpi vermelho"><div class="valor">%s</div><div class="label">Comentarios excluidos</div></div>
+        </div>
 
-        <h2>Perfis do nicho</h2>
-        <table>
-          <tr><th>Perfil</th><th>Pertence ao nicho</th><th>Categoria</th><th>Observacao</th></tr>
-          %s
-        </table>
+        <div class="graficos">
+          <div class="card">
+            <h3>Classificacao dos leads</h3>
+            <canvas id="graficoLeads"></canvas>
+          </div>
+          <div class="card">
+            <h3>Perfis dentro do nicho</h3>
+            <canvas id="graficoNicho"></canvas>
+          </div>
+          <div class="card">
+            <h3>Comentarios: respondidos x excluidos</h3>
+            <canvas id="graficoComentarios"></canvas>
+          </div>
+        </div>
 
-        <h2>Comentarios processados</h2>
-        <table>
-          <tr><th>Perfil</th><th>Comentario</th><th>Status</th><th>Motivo</th></tr>
-          %s
-        </table>
+        <section>
+          <h2>Leads (contatos do Direct)</h2>
+          <table>
+            <tr><th>Perfil</th><th>Nome</th><th>Classificacao</th><th>Resumo</th></tr>
+            %s
+          </table>
+        </section>
+
+        <section>
+          <h2>Perfis do nicho</h2>
+          <table>
+            <tr><th>Perfil</th><th>Pertence ao nicho</th><th>Categoria</th><th>Observacao</th></tr>
+            %s
+          </table>
+        </section>
+
+        <section>
+          <h2>Comentarios processados</h2>
+          <table>
+            <tr><th>Perfil</th><th>Comentario</th><th>Status</th><th>Motivo</th></tr>
+            %s
+          </table>
+        </section>
+
+        <script>
+          const dados = %s;
+
+          new Chart(document.getElementById('graficoLeads'), {
+            type: 'doughnut',
+            data: {
+              labels: ['Lead qualificado', 'Curioso', 'Sem interesse'],
+              datasets: [{
+                data: [
+                  dados.classificacao.lead_qualificado,
+                  dados.classificacao.curioso,
+                  dados.classificacao.sem_interesse
+                ],
+                backgroundColor: ['#16a34a', '#f59e0b', '#dc2626']
+              }]
+            },
+            options: { plugins: { legend: { position: 'bottom' } } }
+          });
+
+          new Chart(document.getElementById('graficoNicho'), {
+            type: 'doughnut',
+            data: {
+              labels: ['Dentro do nicho', 'Fora do nicho'],
+              datasets: [{
+                data: [dados.nicho.no_nicho, dados.nicho.fora_nicho],
+                backgroundColor: ['#7c3aed', '#e5e7eb']
+              }]
+            },
+            options: { plugins: { legend: { position: 'bottom' } } }
+          });
+
+          new Chart(document.getElementById('graficoComentarios'), {
+            type: 'bar',
+            data: {
+              labels: ['Comentarios'],
+              datasets: [
+                { label: 'Respondidos', data: [dados.comentarios.respondidos], backgroundColor: '#2563eb' },
+                { label: 'Excluidos', data: [dados.comentarios.excluidos], backgroundColor: '#dc2626' }
+              ]
+            },
+            options: { plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+          });
+        </script>
       </body>
     </html>
-    """ % (linhas_leads, linhas_nicho, linhas_comentarios)
+    """ % (
+        total_leads,
+        contagem_classificacao["lead_qualificado"],
+        total_perfis_nicho,
+        comentarios_excluidos,
+        linhas_leads,
+        linhas_nicho,
+        linhas_comentarios,
+        json.dumps(dados_grafico),
+    )
 
     return html, 200
 
