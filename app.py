@@ -176,20 +176,24 @@ def painel():
             max-width: 1100px;
             margin: 0 auto;
             padding: 24px 16px 60px;
-            background: linear-gradient(135deg, #f1f4ff 0%%, #f7f3ff 50%%, #fff5f7 100%%);
-            color: #1e1b2e;
+            background: #0a0a12;
+            background-image:
+              radial-gradient(circle at 15%% 0%%, rgba(99,102,241,0.20), transparent 40%%),
+              radial-gradient(circle at 85%% 15%%, rgba(236,72,153,0.18), transparent 40%%),
+              radial-gradient(circle at 50%% 100%%, rgba(34,211,238,0.12), transparent 45%%);
+            color: #e5e7eb;
           }
           header h1 {
             margin: 0;
             font-size: 30px;
             font-weight: 800;
-            background: linear-gradient(135deg, #6366f1, #ec4899);
+            background: linear-gradient(135deg, #818cf8, #f472b6, #22d3ee);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             display: inline-block;
           }
-          header p { color: #6b7280; margin-top: 4px; }
+          header p { color: #9ca3af; margin-top: 4px; }
 
           .kpis {
             display: grid;
@@ -200,15 +204,15 @@ def painel():
           .kpi {
             border-radius: 16px;
             padding: 20px 22px;
-            box-shadow: 0 8px 20px -8px rgba(0,0,0,0.25);
+            box-shadow: 0 8px 24px -8px rgba(0,0,0,0.6);
             color: #fff;
           }
           .kpi .valor { font-size: 32px; font-weight: 800; }
           .kpi .label { color: rgba(255,255,255,0.85); font-size: 13px; margin-top: 4px; font-weight: 500; }
-          .kpi.azul { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+          .kpi.azul { background: linear-gradient(135deg, #818cf8, #4f46e5); }
           .kpi.verde { background: linear-gradient(135deg, #34d399, #059669); }
-          .kpi.roxo { background: linear-gradient(135deg, #c084fc, #7c3aed); }
-          .kpi.vermelho { background: linear-gradient(135deg, #fb7185, #e11d48); }
+          .kpi.roxo { background: linear-gradient(135deg, #e879f9, #a21caf); }
+          .kpi.vermelho { background: linear-gradient(135deg, #fb7185, #be123c); }
 
           .graficos {
             display: grid;
@@ -217,37 +221,35 @@ def painel():
             margin-bottom: 32px;
           }
           .card {
-            background: #ffffffcc;
-            backdrop-filter: blur(6px);
-            border: 1px solid #ffffff;
+            background: #15151f;
+            border: 1px solid #2a2a3a;
             border-radius: 16px;
             padding: 16px;
-            box-shadow: 0 8px 24px -12px rgba(99,102,241,0.25);
+            box-shadow: 0 8px 24px -12px rgba(99,102,241,0.35);
           }
-          .card h3 { margin: 0 0 12px; font-size: 15px; color: #4b3f72; font-weight: 700; }
+          .card h3 { margin: 0 0 12px; font-size: 15px; color: #c4b5fd; font-weight: 700; }
           .card canvas { max-height: 220px; }
 
           section h2 {
             font-size: 18px;
             margin: 32px 0 12px;
-            color: #312e81;
+            color: #e5e7eb;
             font-weight: 700;
           }
           table {
             width: 100%%;
             border-collapse: collapse;
-            background: #ffffffcc;
-            backdrop-filter: blur(6px);
-            border: 1px solid #ffffff;
+            background: #15151f;
+            border: 1px solid #2a2a3a;
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 8px 24px -12px rgba(99,102,241,0.2);
+            box-shadow: 0 8px 24px -12px rgba(99,102,241,0.25);
           }
-          th, td { padding: 10px 12px; text-align: left; font-size: 13px; border-bottom: 1px solid #f0eefc; }
-          th { background: #f5f3ff; color: #6d28d9; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.04em; }
+          th, td { padding: 10px 12px; text-align: left; font-size: 13px; border-bottom: 1px solid #232333; color: #e5e7eb; }
+          th { background: #1c1c2b; color: #a5b4fc; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.04em; }
           tr:last-child td { border-bottom: none; }
-          tr:hover td { background: #faf9ff; }
-          td.vazio { text-align: center; color: #9ca3af; padding: 18px; }
+          tr:hover td { background: #1c1c2b; }
+          td.vazio { text-align: center; color: #6b7280; padding: 18px; }
 
           .badge {
             display: inline-block;
@@ -256,13 +258,13 @@ def painel():
             font-size: 12px;
             font-weight: 700;
           }
-          .badge-lead_qualificado { background: linear-gradient(135deg, #6ee7b7, #10b981); color: #064e3b; }
-          .badge-curioso { background: linear-gradient(135deg, #fde68a, #f59e0b); color: #78350f; }
-          .badge-sem_interesse { background: linear-gradient(135deg, #fda4af, #f43f5e); color: #881337; }
-          .badge-sim { background: linear-gradient(135deg, #6ee7b7, #10b981); color: #064e3b; }
-          .badge-nao { background: #eef0f4; color: #6b7280; }
-          .badge-respondido { background: linear-gradient(135deg, #a5b4fc, #6366f1); color: #fff; }
-          .badge-excluido { background: linear-gradient(135deg, #fda4af, #f43f5e); color: #881337; }
+          .badge-lead_qualificado { background: linear-gradient(135deg, #34d399, #059669); color: #ecfdf5; }
+          .badge-curioso { background: linear-gradient(135deg, #fbbf24, #d97706); color: #1c1306; }
+          .badge-sem_interesse { background: linear-gradient(135deg, #fb7185, #be123c); color: #fff1f2; }
+          .badge-sim { background: linear-gradient(135deg, #34d399, #059669); color: #ecfdf5; }
+          .badge-nao { background: #2a2a3a; color: #9ca3af; }
+          .badge-respondido { background: linear-gradient(135deg, #818cf8, #4f46e5); color: #eef2ff; }
+          .badge-excluido { background: linear-gradient(135deg, #fb7185, #be123c); color: #fff1f2; }
         </style>
       </head>
       <body>
@@ -330,11 +332,11 @@ def painel():
                   dados.classificacao.curioso,
                   dados.classificacao.sem_interesse
                 ],
-                backgroundColor: ['#10b981', '#f59e0b', '#f43f5e'],
+                backgroundColor: ['#34d399', '#fbbf24', '#fb7185'],
                 borderWidth: 0
               }]
             },
-            options: { plugins: { legend: { position: 'bottom', labels: { color: '#4b3f72' } } } }
+            options: { plugins: { legend: { position: 'bottom', labels: { color: '#c4b5fd' } } } }
           });
 
           new Chart(document.getElementById('graficoNicho'), {
@@ -343,11 +345,11 @@ def painel():
               labels: ['Dentro do nicho', 'Fora do nicho'],
               datasets: [{
                 data: [dados.nicho.no_nicho, dados.nicho.fora_nicho],
-                backgroundColor: ['#a855f7', '#e9d5ff'],
+                backgroundColor: ['#e879f9', '#3f3f5f'],
                 borderWidth: 0
               }]
             },
-            options: { plugins: { legend: { position: 'bottom', labels: { color: '#4b3f72' } } } }
+            options: { plugins: { legend: { position: 'bottom', labels: { color: '#c4b5fd' } } } }
           });
 
           new Chart(document.getElementById('graficoComentarios'), {
@@ -355,11 +357,11 @@ def painel():
             data: {
               labels: ['Comentarios'],
               datasets: [
-                { label: 'Respondidos', data: [dados.comentarios.respondidos], backgroundColor: '#6366f1', borderRadius: 8 },
-                { label: 'Excluidos', data: [dados.comentarios.excluidos], backgroundColor: '#f43f5e', borderRadius: 8 }
+                { label: 'Respondidos', data: [dados.comentarios.respondidos], backgroundColor: '#818cf8', borderRadius: 8 },
+                { label: 'Excluidos', data: [dados.comentarios.excluidos], backgroundColor: '#fb7185', borderRadius: 8 }
               ]
             },
-            options: { plugins: { legend: { position: 'bottom', labels: { color: '#4b3f72' } } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+            options: { plugins: { legend: { position: 'bottom', labels: { color: '#c4b5fd' } } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
           });
         </script>
       </body>
