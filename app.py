@@ -14,6 +14,7 @@ from flask import Flask, request, jsonify
 import storage
 import ig_client
 import ai_responder
+import image_gen
 
 app = Flask(__name__)
 
@@ -186,6 +187,14 @@ ESTILO_BASE = """
   .criativo-card h4 { margin: 0 0 8px; color: #6ddc2f; font-size: 14px; text-transform: uppercase; letter-spacing: 0.04em; }
   .criativo-card p { margin: 0 0 10px; line-height: 1.5; }
   .criativo-card .hashtags { color: #8be33f; font-size: 13px; }
+  .criativo-imagem {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 12px;
+    margin-bottom: 14px;
+    border: 1px solid #1d3a22;
+    display: block;
+  }
 """
 
 NAV_HTML = """
@@ -467,7 +476,8 @@ def criativos():
         if tema:
             negocio = get_config()
             resultado = ai_responder.gerar_criativo(tema, negocio)
-            criativos_dados.insert(0, {"tema": tema, "resultado": resultado})
+            imagem_url = image_gen.gerar_imagem(resultado.get("ideia_visual", ""))
+            criativos_dados.insert(0, {"tema": tema, "resultado": resultado, "imagem_url": imagem_url})
             if len(criativos_dados) > 50:
                 criativos_dados = criativos_dados[:50]
             storage.gravar("criativos", criativos_dados)
@@ -477,14 +487,18 @@ def criativos():
         resultado = item.get("resultado") or {}
         hashtags = resultado.get("hashtags") or []
         hashtags_txt = " ".join("#%s" % h for h in hashtags)
+        imagem_url = item.get("imagem_url")
+        imagem_html = "<img class='criativo-imagem' src='%s' alt='Imagem do criativo'>" % imagem_url if imagem_url else ""
         cards_criativos += (
             "<div class='criativo-card'>"
+            "%s"
             "<h4>Tema: %s</h4>"
             "<p>%s</p>"
             "<p class='hashtags'>%s</p>"
             "<p><strong>Ideia visual:</strong> %s</p>"
             "</div>"
         ) % (
+            imagem_html,
             item.get("tema", ""),
             resultado.get("legenda", ""),
             hashtags_txt,

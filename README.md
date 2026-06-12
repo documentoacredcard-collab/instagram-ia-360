@@ -23,8 +23,9 @@ com o RADAR EMPRESARIAL 360). Usa a API oficial da Meta (Instagram Messaging API
   "porcaria", "golpe") sao identificados pela IA e excluidos automaticamente.
 - **Painel visual** (`/painel`): tela simples com leads, perfis do nicho e
   comentarios processados (respondidos ou excluidos).
-- **Criativos** (`/criativos`): tela para gerar ideias de post para o
-  Instagram (legenda, hashtags e ideia visual) a partir de um tema, usando IA.
+- **Criativos** (`/criativos`): tela para gerar posts completos para o
+  Instagram (legenda, hashtags, ideia visual e a imagem gerada por IA) a
+  partir de um tema.
 
 ## Configuracao
 
@@ -37,6 +38,8 @@ com o RADAR EMPRESARIAL 360). Usa a API oficial da Meta (Instagram Messaging API
    - `IG_ACCESS_TOKEN`: token de acesso da pagina/conta do Instagram
    - `IG_VERIFY_TOKEN`: token que voce escolhe para validar o webhook
    - `ANTHROPIC_API_KEY`: chave da API do Claude
+   - `OPENAI_API_KEY`: chave da API da OpenAI, usada para gerar as imagens
+     dos criativos (DALL-E 3)
 4. Configure o negocio (nome, nicho, tom de voz, oferta) via `POST /config`,
    para a IA personalizar as respostas.
 
