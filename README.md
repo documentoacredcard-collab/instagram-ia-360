@@ -19,8 +19,10 @@ com o RADAR EMPRESARIAL 360). Usa a API oficial da Meta (Instagram Messaging API
   comentario) e analisado pela IA para indicar se pertence ao
   nicho/publico-alvo do negocio, consultavel em `/perfis-nicho`.
 - **Exclusao automatica de comentarios negativos**: comentarios ofensivos,
-  com discurso de odio, assedio ou spam sao identificados pela IA e
-  excluidos automaticamente.
+  com discurso de odio, assedio, spam ou que depreciem o negocio (ex:
+  "porcaria", "golpe") sao identificados pela IA e excluidos automaticamente.
+- **Painel visual** (`/painel`): tela simples com leads, perfis do nicho e
+  comentarios processados (respondidos ou excluidos).
 
 ## Configuracao
 
