@@ -123,6 +123,61 @@ def qualificar_perfil(perfil, mensagem, negocio):
         }
 
 
+def analisar_perfil_nicho(perfil, texto, negocio):
+    """
+    Analisa se um perfil que interagiu (DM ou comentario) parece pertencer
+    ao nicho/publico-alvo do negocio, para alimentar um rastreador de perfis.
+
+    Retorna um dict: {"pertence_ao_nicho": bool, "categoria": ..., "observacao": ...}
+    """
+    nome = perfil.get("name") or perfil.get("username") or "amigo(a)"
+    username = perfil.get("username", "")
+
+    contexto_negocio = (
+        "Negocio: %s\n"
+        "Nicho/publico-alvo: %s\n"
+    ) % (
+        negocio.get("nome", ""),
+        negocio.get("nicho", ""),
+    )
+
+    prompt = (
+        "%s\n"
+        "Um perfil (@%s, nome: %s) interagiu com sua conta do Instagram, "
+        "com o seguinte texto: \"%s\"\n\n"
+        "Avalie se esse perfil parece pertencer ao nicho/publico-alvo do negocio. "
+        "Responda APENAS com um JSON no formato:\n"
+        '{"pertence_ao_nicho": true | false, '
+        '"categoria": "uma categoria curta para esse perfil (ex: empreendedor, '
+        'curioso, concorrente, fora_do_nicho)", '
+        '"observacao": "uma frase curta justificando"}'
+    ) % (contexto_negocio, username, nome, texto)
+
+    resposta = client.messages.create(
+        model=MODEL,
+        max_tokens=300,
+        thinking={"type": "adaptive"},
+        output_config={"effort": "low"},
+        messages=[{"role": "user", "content": prompt}],
+    )
+
+    texto_final = ""
+    for bloco in resposta.content:
+        if bloco.type == "text":
+            texto_final += bloco.text
+
+    try:
+        inicio = texto_final.index("{")
+        fim = texto_final.rindex("}") + 1
+        return json.loads(texto_final[inicio:fim])
+    except Exception:
+        return {
+            "pertence_ao_nicho": False,
+            "categoria": "indefinido",
+            "observacao": texto_final.strip(),
+        }
+
+
 def gerar_resposta_comentario(username, comentario, negocio):
     """
     Gera uma resposta privada (enviada para o Direct) em reacao a um

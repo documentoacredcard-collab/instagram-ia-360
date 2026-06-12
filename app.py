@@ -56,6 +56,12 @@ def privacy():
     """, 200
 
 
+@app.route("/perfis-nicho")
+def perfis_nicho():
+    """Lista os perfis rastreados e a analise de pertencimento ao nicho."""
+    return jsonify(storage.ler("perfis_nicho", {}))
+
+
 @app.route("/leads")
 def leads():
     """Lista os contatos do Direct com a qualificacao gerada pela IA."""
@@ -110,6 +116,21 @@ def receber_webhook():
     return jsonify({"status": "ok"}), 200
 
 
+def registrar_perfil_nicho(perfil_id, perfil, texto, negocio):
+    """Analisa e registra um perfil que interagiu, para o rastreador de nicho."""
+    if not perfil_id:
+        return
+    perfis = storage.ler("perfis_nicho", {})
+    if perfil_id in perfis:
+        return
+    analise = ai_responder.analisar_perfil_nicho(perfil, texto, negocio)
+    perfis[perfil_id] = {
+        "perfil": perfil,
+        "analise": analise,
+    }
+    storage.gravar("perfis_nicho", perfis)
+
+
 def processar_mensagem(evento):
     mensagem = evento.get("message", {})
 
@@ -156,6 +177,9 @@ def processar_mensagem(evento):
 
     storage.gravar("conversas", conversas)
 
+    # rastreia o perfil para o radar de nicho
+    registrar_perfil_nicho(igsid, perfil, texto_recebido, negocio)
+
 
 def processar_comentario(valor):
     comment_id = valor.get("id")
@@ -178,6 +202,11 @@ def processar_comentario(valor):
 
     comentarios.append(comment_id)
     storage.gravar("comentarios", comentarios[-500:])
+
+    # rastreia o perfil para o radar de nicho
+    perfil_id = autor.get("id")
+    perfil = {"id": perfil_id, "username": username}
+    registrar_perfil_nicho(perfil_id, perfil, texto, negocio)
 
 
 if __name__ == "__main__":
