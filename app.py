@@ -38,6 +38,24 @@ def home():
     return jsonify({"status": "online", "sistema": "INSTAGRAM IA 360"})
 
 
+@app.route("/privacy")
+def privacy():
+    return """
+    <html>
+      <head><title>Politica de Privacidade - Radar IA 360</title></head>
+      <body style="font-family: Arial, sans-serif; max-width: 700px; margin: 40px auto; line-height: 1.6;">
+        <h1>Politica de Privacidade</h1>
+        <p>Este aplicativo (Radar IA 360) usa a API do Instagram para responder
+        automaticamente mensagens recebidas no Direct da conta comercial conectada.</p>
+        <p>As mensagens trocadas sao usadas exclusivamente para gerar respostas
+        automaticas e nao sao compartilhadas com terceiros.</p>
+        <p>Para solicitar a exclusao dos seus dados, entre em contato pelo email
+        radarempresarial360@gmail.com.</p>
+      </body>
+    </html>
+    """, 200
+
+
 @app.route("/config", methods=["GET", "POST"])
 def config():
     if request.method == "GET":
