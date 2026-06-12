@@ -188,9 +188,11 @@ def comentario_e_negativo(comentario):
     prompt = (
         "Avalie o comentario abaixo, feito publicamente em um post do Instagram:\n"
         "\"%s\"\n\n"
-        "Considere negativo apenas comentarios ofensivos, agressivos, com "
-        "discurso de odio, assedio, spam ou conteudo claramente prejudicial. "
-        "Criticas educadas ou opinioes neutras NAO sao negativas.\n\n"
+        "Considere negativo comentarios ofensivos, agressivos, com discurso de "
+        "odio, assedio, spam, ou que depreciem o negocio/produto/marca com "
+        "palavras pejorativas ou acusacoes (ex: chamar de 'porcaria', 'lixo', "
+        "'golpe', 'golpista', 'enganacao'). Criticas educadas, construtivas "
+        "ou opinioes neutras NAO sao negativas.\n\n"
         "Responda APENAS com um JSON no formato:\n"
         '{"negativo": true | false, "motivo": "breve justificativa"}'
     ) % (comentario,)
