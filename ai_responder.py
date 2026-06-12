@@ -47,6 +47,7 @@ def gerar_resposta(perfil, mensagem, historico, negocio):
         "Nova mensagem recebida: \"%s\"\n\n"
         "Escreva uma resposta curta, natural e personalizada para o Direct do Instagram, "
         "usando o nome da pessoa quando fizer sentido. Nao use markdown, nao assine, "
+        "nao use emojis, escreva de forma humana e natural, "
         "responda como se fosse uma conversa real de WhatsApp/Instagram."
     ) % (contexto_negocio, username, nome, historico_txt, mensagem)
 
@@ -244,7 +245,8 @@ def gerar_resposta_comentario(username, comentario, negocio):
         "A pessoa @%s comentou no seu post/Reels: \"%s\"\n\n"
         "Escreva uma mensagem curta e calorosa para enviar no Direct dela, "
         "agradecendo o comentario e abrindo conversa para continuar por ali "
-        "(sem ser insistente). Nao use markdown, nao assine, responda como "
+        "(sem ser insistente). Nao use markdown, nao assine, nao use emojis, "
+        "escreva de forma humana e natural, responda como "
         "se fosse uma conversa real de WhatsApp/Instagram."
     ) % (contexto_negocio, username, comentario)
 
