@@ -176,25 +176,25 @@ def painel():
             max-width: 1100px;
             margin: 0 auto;
             padding: 24px 16px 60px;
-            background: #050806;
+            background: #0a0a0a;
             background-image:
-              radial-gradient(circle at 15%% 0%%, rgba(57,255,20,0.16), transparent 40%%),
-              radial-gradient(circle at 85%% 15%%, rgba(0,255,170,0.14), transparent 40%%),
-              radial-gradient(circle at 50%% 100%%, rgba(173,255,47,0.10), transparent 45%%);
-            color: #e5fbe8;
+              radial-gradient(circle at 15%% 0%%, rgba(70,200,28,0.18), transparent 40%%),
+              radial-gradient(circle at 85%% 15%%, rgba(70,200,28,0.12), transparent 40%%),
+              radial-gradient(circle at 50%% 100%%, rgba(70,200,28,0.08), transparent 45%%);
+            color: #eeeeee;
           }
           header h1 {
             margin: 0;
             font-size: 30px;
             font-weight: 800;
-            background: linear-gradient(135deg, #39ff14, #00ffaa, #adff2f);
+            background: linear-gradient(180deg, #46c81c 0%%, rgba(70,200,28,0.5) 100%%);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             display: inline-block;
-            text-shadow: 0 0 18px rgba(57,255,20,0.35);
+            text-shadow: 0 0 18px rgba(70,200,28,0.35);
           }
-          header p { color: #8fae9a; margin-top: 4px; }
+          header p { color: #a3a3a3; margin-top: 4px; }
 
           .kpis {
             display: grid;
@@ -206,14 +206,14 @@ def painel():
             border-radius: 16px;
             padding: 20px 22px;
             box-shadow: 0 0 24px -6px currentColor, 0 8px 24px -8px rgba(0,0,0,0.7);
-            color: #04150a;
+            color: #07210e;
           }
           .kpi .valor { font-size: 32px; font-weight: 800; }
-          .kpi .label { color: rgba(4,21,10,0.75); font-size: 13px; margin-top: 4px; font-weight: 600; }
-          .kpi.azul { background: linear-gradient(135deg, #00ffaa, #00b894); color: #04150a; }
-          .kpi.verde { background: linear-gradient(135deg, #39ff14, #2bb50f); color: #04150a; }
-          .kpi.roxo { background: linear-gradient(135deg, #adff2f, #7cc100); color: #11220a; }
-          .kpi.vermelho { background: linear-gradient(135deg, #ff5e5e, #c81e1e); color: #1a0505; }
+          .kpi .label { color: rgba(7,33,14,0.75); font-size: 13px; margin-top: 4px; font-weight: 600; }
+          .kpi.azul { background: linear-gradient(135deg, #6ddc2f, #2f8a13); color: #07210e; }
+          .kpi.verde { background: linear-gradient(135deg, #46c81c, #2f8a13); color: #07210e; }
+          .kpi.roxo { background: linear-gradient(135deg, #8be33f, #5a9c1a); color: #11220a; }
+          .kpi.vermelho { background: linear-gradient(135deg, #ff5b5f, #c4222a); color: #240505; }
 
           .graficos {
             display: grid;
@@ -222,35 +222,35 @@ def painel():
             margin-bottom: 32px;
           }
           .card {
-            background: #0c130d;
-            border: 1px solid #1f3a23;
+            background: #0f1410;
+            border: 1px solid #1d3a22;
             border-radius: 16px;
             padding: 16px;
-            box-shadow: 0 8px 24px -12px rgba(57,255,20,0.35);
+            box-shadow: 0 8px 24px -12px rgba(70,200,28,0.35);
           }
-          .card h3 { margin: 0 0 12px; font-size: 15px; color: #7dffb0; font-weight: 700; }
+          .card h3 { margin: 0 0 12px; font-size: 15px; color: #6ddc2f; font-weight: 700; }
           .card canvas { max-height: 220px; }
 
           section h2 {
             font-size: 18px;
             margin: 32px 0 12px;
-            color: #aef7c4;
+            color: #cdebb0;
             font-weight: 700;
-            text-shadow: 0 0 10px rgba(57,255,20,0.25);
+            text-shadow: 0 0 10px rgba(70,200,28,0.25);
           }
           table {
             width: 100%%;
             border-collapse: collapse;
-            background: #0c130d;
-            border: 1px solid #1f3a23;
+            background: #0f1410;
+            border: 1px solid #1d3a22;
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 8px 24px -12px rgba(57,255,20,0.25);
+            box-shadow: 0 8px 24px -12px rgba(70,200,28,0.25);
           }
-          th, td { padding: 10px 12px; text-align: left; font-size: 13px; border-bottom: 1px solid #16241a; color: #e5fbe8; }
-          th { background: #11201a; color: #7dffb0; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.04em; }
+          th, td { padding: 10px 12px; text-align: left; font-size: 13px; border-bottom: 1px solid #162018; color: #eeeeee; }
+          th { background: #122016; color: #6ddc2f; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.04em; }
           tr:last-child td { border-bottom: none; }
-          tr:hover td { background: #11201a; }
+          tr:hover td { background: #122016; }
           td.vazio { text-align: center; color: #5b7a66; padding: 18px; }
 
           .badge {
@@ -260,13 +260,13 @@ def painel():
             font-size: 12px;
             font-weight: 700;
           }
-          .badge-lead_qualificado { background: linear-gradient(135deg, #39ff14, #2bb50f); color: #04150a; }
-          .badge-curioso { background: linear-gradient(135deg, #adff2f, #7cc100); color: #11220a; }
-          .badge-sem_interesse { background: linear-gradient(135deg, #ff5e5e, #c81e1e); color: #1a0505; }
-          .badge-sim { background: linear-gradient(135deg, #39ff14, #2bb50f); color: #04150a; }
-          .badge-nao { background: #1f3a23; color: #8fae9a; }
-          .badge-respondido { background: linear-gradient(135deg, #00ffaa, #00b894); color: #04150a; }
-          .badge-excluido { background: linear-gradient(135deg, #ff5e5e, #c81e1e); color: #1a0505; }
+          .badge-lead_qualificado { background: linear-gradient(135deg, #46c81c, #2f8a13); color: #07210e; }
+          .badge-curioso { background: linear-gradient(135deg, #8be33f, #5a9c1a); color: #11220a; }
+          .badge-sem_interesse { background: linear-gradient(135deg, #ff5b5f, #c4222a); color: #240505; }
+          .badge-sim { background: linear-gradient(135deg, #46c81c, #2f8a13); color: #07210e; }
+          .badge-nao { background: #1d3a22; color: #a3a3a3; }
+          .badge-respondido { background: linear-gradient(135deg, #6ddc2f, #2f8a13); color: #07210e; }
+          .badge-excluido { background: linear-gradient(135deg, #ff5b5f, #c4222a); color: #240505; }
         </style>
       </head>
       <body>
@@ -334,11 +334,11 @@ def painel():
                   dados.classificacao.curioso,
                   dados.classificacao.sem_interesse
                 ],
-                backgroundColor: ['#39ff14', '#adff2f', '#ff5e5e'],
+                backgroundColor: ['#46c81c', '#8be33f', '#ff5b5f'],
                 borderWidth: 0
               }]
             },
-            options: { plugins: { legend: { position: 'bottom', labels: { color: '#7dffb0' } } } }
+            options: { plugins: { legend: { position: 'bottom', labels: { color: '#6ddc2f' } } } }
           });
 
           new Chart(document.getElementById('graficoNicho'), {
@@ -347,11 +347,11 @@ def painel():
               labels: ['Dentro do nicho', 'Fora do nicho'],
               datasets: [{
                 data: [dados.nicho.no_nicho, dados.nicho.fora_nicho],
-                backgroundColor: ['#00ffaa', '#1f3a23'],
+                backgroundColor: ['#46c81c', '#1d3a22'],
                 borderWidth: 0
               }]
             },
-            options: { plugins: { legend: { position: 'bottom', labels: { color: '#7dffb0' } } } }
+            options: { plugins: { legend: { position: 'bottom', labels: { color: '#6ddc2f' } } } }
           });
 
           new Chart(document.getElementById('graficoComentarios'), {
@@ -359,11 +359,11 @@ def painel():
             data: {
               labels: ['Comentarios'],
               datasets: [
-                { label: 'Respondidos', data: [dados.comentarios.respondidos], backgroundColor: '#39ff14', borderRadius: 8 },
-                { label: 'Excluidos', data: [dados.comentarios.excluidos], backgroundColor: '#ff5e5e', borderRadius: 8 }
+                { label: 'Respondidos', data: [dados.comentarios.respondidos], backgroundColor: '#46c81c', borderRadius: 8 },
+                { label: 'Excluidos', data: [dados.comentarios.excluidos], backgroundColor: '#ff5b5f', borderRadius: 8 }
               ]
             },
-            options: { plugins: { legend: { position: 'bottom', labels: { color: '#7dffb0' } } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+            options: { plugins: { legend: { position: 'bottom', labels: { color: '#6ddc2f' } } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
           });
         </script>
       </body>
