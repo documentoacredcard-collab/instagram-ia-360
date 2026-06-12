@@ -176,10 +176,19 @@ def painel():
             max-width: 1100px;
             margin: 0 auto;
             padding: 24px 16px 60px;
-            background: #f4f6f9;
-            color: #1f2937;
+            background: linear-gradient(135deg, #f1f4ff 0%%, #f7f3ff 50%%, #fff5f7 100%%);
+            color: #1e1b2e;
           }
-          header h1 { margin: 0; font-size: 28px; }
+          header h1 {
+            margin: 0;
+            font-size: 30px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+          }
           header p { color: #6b7280; margin-top: 4px; }
 
           .kpis {
@@ -189,17 +198,17 @@ def painel():
             margin: 24px 0;
           }
           .kpi {
-            background: #fff;
-            border-radius: 12px;
-            padding: 18px 20px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            border-radius: 16px;
+            padding: 20px 22px;
+            box-shadow: 0 8px 20px -8px rgba(0,0,0,0.25);
+            color: #fff;
           }
-          .kpi .valor { font-size: 30px; font-weight: 700; }
-          .kpi .label { color: #6b7280; font-size: 13px; margin-top: 4px; }
-          .kpi.azul .valor { color: #2563eb; }
-          .kpi.verde .valor { color: #16a34a; }
-          .kpi.roxo .valor { color: #7c3aed; }
-          .kpi.vermelho .valor { color: #dc2626; }
+          .kpi .valor { font-size: 32px; font-weight: 800; }
+          .kpi .label { color: rgba(255,255,255,0.85); font-size: 13px; margin-top: 4px; font-weight: 500; }
+          .kpi.azul { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+          .kpi.verde { background: linear-gradient(135deg, #34d399, #059669); }
+          .kpi.roxo { background: linear-gradient(135deg, #c084fc, #7c3aed); }
+          .kpi.vermelho { background: linear-gradient(135deg, #fb7185, #e11d48); }
 
           .graficos {
             display: grid;
@@ -208,46 +217,52 @@ def painel():
             margin-bottom: 32px;
           }
           .card {
-            background: #fff;
-            border-radius: 12px;
+            background: #ffffffcc;
+            backdrop-filter: blur(6px);
+            border: 1px solid #ffffff;
+            border-radius: 16px;
             padding: 16px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 24px -12px rgba(99,102,241,0.25);
           }
-          .card h3 { margin: 0 0 12px; font-size: 15px; color: #374151; }
+          .card h3 { margin: 0 0 12px; font-size: 15px; color: #4b3f72; font-weight: 700; }
           .card canvas { max-height: 220px; }
 
           section h2 {
             font-size: 18px;
             margin: 32px 0 12px;
-            color: #111827;
+            color: #312e81;
+            font-weight: 700;
           }
           table {
             width: 100%%;
             border-collapse: collapse;
-            background: #fff;
-            border-radius: 12px;
+            background: #ffffffcc;
+            backdrop-filter: blur(6px);
+            border: 1px solid #ffffff;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 24px -12px rgba(99,102,241,0.2);
           }
-          th, td { padding: 10px 12px; text-align: left; font-size: 13px; border-bottom: 1px solid #f0f1f3; }
-          th { background: #f9fafb; color: #6b7280; font-weight: 600; text-transform: uppercase; font-size: 11px; }
+          th, td { padding: 10px 12px; text-align: left; font-size: 13px; border-bottom: 1px solid #f0eefc; }
+          th { background: #f5f3ff; color: #6d28d9; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.04em; }
           tr:last-child td { border-bottom: none; }
+          tr:hover td { background: #faf9ff; }
           td.vazio { text-align: center; color: #9ca3af; padding: 18px; }
 
           .badge {
             display: inline-block;
-            padding: 3px 10px;
+            padding: 3px 12px;
             border-radius: 999px;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
           }
-          .badge-lead_qualificado { background: #dcfce7; color: #166534; }
-          .badge-curioso { background: #fef3c7; color: #92400e; }
-          .badge-sem_interesse { background: #fee2e2; color: #991b1b; }
-          .badge-sim { background: #dcfce7; color: #166534; }
-          .badge-nao { background: #f3f4f6; color: #6b7280; }
-          .badge-respondido { background: #dbeafe; color: #1e40af; }
-          .badge-excluido { background: #fee2e2; color: #991b1b; }
+          .badge-lead_qualificado { background: linear-gradient(135deg, #6ee7b7, #10b981); color: #064e3b; }
+          .badge-curioso { background: linear-gradient(135deg, #fde68a, #f59e0b); color: #78350f; }
+          .badge-sem_interesse { background: linear-gradient(135deg, #fda4af, #f43f5e); color: #881337; }
+          .badge-sim { background: linear-gradient(135deg, #6ee7b7, #10b981); color: #064e3b; }
+          .badge-nao { background: #eef0f4; color: #6b7280; }
+          .badge-respondido { background: linear-gradient(135deg, #a5b4fc, #6366f1); color: #fff; }
+          .badge-excluido { background: linear-gradient(135deg, #fda4af, #f43f5e); color: #881337; }
         </style>
       </head>
       <body>
@@ -315,10 +330,11 @@ def painel():
                   dados.classificacao.curioso,
                   dados.classificacao.sem_interesse
                 ],
-                backgroundColor: ['#16a34a', '#f59e0b', '#dc2626']
+                backgroundColor: ['#10b981', '#f59e0b', '#f43f5e'],
+                borderWidth: 0
               }]
             },
-            options: { plugins: { legend: { position: 'bottom' } } }
+            options: { plugins: { legend: { position: 'bottom', labels: { color: '#4b3f72' } } } }
           });
 
           new Chart(document.getElementById('graficoNicho'), {
@@ -327,10 +343,11 @@ def painel():
               labels: ['Dentro do nicho', 'Fora do nicho'],
               datasets: [{
                 data: [dados.nicho.no_nicho, dados.nicho.fora_nicho],
-                backgroundColor: ['#7c3aed', '#e5e7eb']
+                backgroundColor: ['#a855f7', '#e9d5ff'],
+                borderWidth: 0
               }]
             },
-            options: { plugins: { legend: { position: 'bottom' } } }
+            options: { plugins: { legend: { position: 'bottom', labels: { color: '#4b3f72' } } } }
           });
 
           new Chart(document.getElementById('graficoComentarios'), {
@@ -338,11 +355,11 @@ def painel():
             data: {
               labels: ['Comentarios'],
               datasets: [
-                { label: 'Respondidos', data: [dados.comentarios.respondidos], backgroundColor: '#2563eb' },
-                { label: 'Excluidos', data: [dados.comentarios.excluidos], backgroundColor: '#dc2626' }
+                { label: 'Respondidos', data: [dados.comentarios.respondidos], backgroundColor: '#6366f1', borderRadius: 8 },
+                { label: 'Excluidos', data: [dados.comentarios.excluidos], backgroundColor: '#f43f5e', borderRadius: 8 }
               ]
             },
-            options: { plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+            options: { plugins: { legend: { position: 'bottom', labels: { color: '#4b3f72' } } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
           });
         </script>
       </body>
