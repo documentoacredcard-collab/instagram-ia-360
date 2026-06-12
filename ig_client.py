@@ -43,3 +43,20 @@ def send_message(igsid, texto):
     except Exception as e:
         print("[ig_client] erro ao enviar mensagem:", e)
         return {}
+
+
+def send_private_reply(comment_id, texto):
+    """Envia uma resposta privada (Direct) em reacao a um comentario."""
+    url = "%s/me/messages" % GRAPH_URL
+    payload = {
+        "recipient": {"comment_id": comment_id},
+        "message": {"text": texto},
+    }
+    params = {"access_token": ACCESS_TOKEN}
+    try:
+        resp = requests.post(url, params=params, json=payload, timeout=15)
+        resp.raise_for_status()
+        return resp.json()
+    except Exception as e:
+        print("[ig_client] erro ao enviar resposta privada de comentario:", e)
+        return {}

@@ -89,6 +89,9 @@ def receber_webhook():
     for entrada in dados.get("entry", []):
         for evento in entrada.get("messaging", []):
             processar_mensagem(evento)
+        for change in entrada.get("changes", []):
+            if change.get("field") == "comments":
+                processar_comentario(change.get("value", {}))
 
     return jsonify({"status": "ok"}), 200
 
@@ -129,6 +132,29 @@ def processar_mensagem(evento):
         "historico": historico,
     }
     storage.gravar("conversas", conversas)
+
+
+def processar_comentario(valor):
+    comment_id = valor.get("id")
+    texto = valor.get("text")
+    autor = valor.get("from", {})
+    username = autor.get("username")
+
+    # ignora comentarios sem texto, sem autor ou feitos pela propria conta
+    if not comment_id or not texto or not username:
+        return
+
+    # evita responder de novo a um comentario ja tratado
+    comentarios = storage.ler("comentarios", [])
+    if comment_id in comentarios:
+        return
+
+    negocio = get_config()
+    resposta = ai_responder.gerar_resposta_comentario(username, texto, negocio)
+    ig_client.send_private_reply(comment_id, resposta)
+
+    comentarios.append(comment_id)
+    storage.gravar("comentarios", comentarios[-500:])
 
 
 if __name__ == "__main__":
