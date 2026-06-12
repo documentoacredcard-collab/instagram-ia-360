@@ -56,6 +56,20 @@ def privacy():
     """, 200
 
 
+@app.route("/leads")
+def leads():
+    """Lista os contatos do Direct com a qualificacao gerada pela IA."""
+    conversas = storage.ler("conversas", {})
+    resultado = []
+    for igsid, dados in conversas.items():
+        resultado.append({
+            "igsid": igsid,
+            "perfil": dados.get("perfil", {}),
+            "qualificacao": dados.get("qualificacao"),
+        })
+    return jsonify(resultado)
+
+
 @app.route("/config", methods=["GET", "POST"])
 def config():
     if request.method == "GET":
@@ -112,6 +126,7 @@ def processar_mensagem(evento):
 
     # busca historico da conversa
     conversas = storage.ler("conversas", {})
+    contato_novo = igsid not in conversas
     historico = conversas.get(igsid, {}).get("historico", [])
 
     # busca perfil de quem mandou a mensagem
@@ -130,7 +145,15 @@ def processar_mensagem(evento):
     conversas[igsid] = {
         "perfil": perfil,
         "historico": historico,
+        "qualificacao": conversas.get(igsid, {}).get("qualificacao"),
     }
+
+    # qualifica o contato na primeira mensagem dele
+    if contato_novo:
+        conversas[igsid]["qualificacao"] = ai_responder.qualificar_perfil(
+            perfil, texto_recebido, negocio
+        )
+
     storage.gravar("conversas", conversas)
 
 

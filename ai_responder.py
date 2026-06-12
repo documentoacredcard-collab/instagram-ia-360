@@ -3,6 +3,7 @@
 Geracao de respostas personalizadas com IA (Claude) para o Direct do Instagram.
 """
 import os
+import json
 from anthropic import Anthropic
 
 client = Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY", "").strip())
@@ -63,6 +64,63 @@ def gerar_resposta(perfil, mensagem, historico, negocio):
             texto_final += bloco.text
 
     return texto_final.strip()
+
+
+def qualificar_perfil(perfil, mensagem, negocio):
+    """
+    Analisa a primeira mensagem de um novo contato e classifica o perfil
+    em relacao ao negocio, para ajudar a priorizar leads.
+
+    Retorna um dict: {"classificacao": ..., "interesse": ..., "resumo": ...}
+    classificacao: "lead_qualificado", "curioso" ou "sem_interesse"
+    """
+    nome = perfil.get("name") or perfil.get("username") or "amigo(a)"
+    username = perfil.get("username", "")
+
+    contexto_negocio = (
+        "Negocio: %s\n"
+        "Nicho: %s\n"
+        "Oferta/Objetivo principal: %s\n"
+    ) % (
+        negocio.get("nome", ""),
+        negocio.get("nicho", ""),
+        negocio.get("oferta", ""),
+    )
+
+    prompt = (
+        "%s\n"
+        "Um novo contato (@%s, nome: %s) acabou de mandar a primeira mensagem "
+        "no Direct: \"%s\"\n\n"
+        "Classifique esse contato em relacao a oferta do negocio. "
+        "Responda APENAS com um JSON no formato:\n"
+        '{"classificacao": "lead_qualificado" | "curioso" | "sem_interesse", '
+        '"interesse": "breve descricao do que a pessoa parece querer", '
+        '"resumo": "uma frase curta sobre o contato"}'
+    ) % (contexto_negocio, username, nome, mensagem)
+
+    resposta = client.messages.create(
+        model=MODEL,
+        max_tokens=300,
+        thinking={"type": "adaptive"},
+        output_config={"effort": "low"},
+        messages=[{"role": "user", "content": prompt}],
+    )
+
+    texto_final = ""
+    for bloco in resposta.content:
+        if bloco.type == "text":
+            texto_final += bloco.text
+
+    try:
+        inicio = texto_final.index("{")
+        fim = texto_final.rindex("}") + 1
+        return json.loads(texto_final[inicio:fim])
+    except Exception:
+        return {
+            "classificacao": "curioso",
+            "interesse": "",
+            "resumo": texto_final.strip(),
+        }
 
 
 def gerar_resposta_comentario(username, comentario, negocio):
