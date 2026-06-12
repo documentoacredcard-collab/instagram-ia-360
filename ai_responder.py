@@ -264,3 +264,55 @@ def gerar_resposta_comentario(username, comentario, negocio):
             texto_final += bloco.text
 
     return texto_final.strip()
+
+
+def gerar_criativo(tema, negocio):
+    """
+    Gera uma ideia de post (criativo) para o Instagram a partir de um tema.
+
+    tema: assunto/ideia informado pelo usuario para o post
+    negocio: dict com dados do negocio (nome, nicho, tom, oferta)
+
+    Retorna um dict: {"legenda": ..., "hashtags": [...], "ideia_visual": ...}
+    """
+    contexto_negocio = (
+        "Negocio: %s\n"
+        "Nicho: %s\n"
+        "Tom de voz: %s\n"
+        "Oferta/Objetivo principal: %s\n"
+    ) % (
+        negocio.get("nome", ""),
+        negocio.get("nicho", ""),
+        negocio.get("tom", "amigavel e profissional"),
+        negocio.get("oferta", ""),
+    )
+
+    prompt = (
+        "%s\n"
+        "Crie uma ideia de post para o Instagram sobre o seguinte tema: \"%s\"\n\n"
+        "Responda APENAS com um JSON no formato:\n"
+        '{"legenda": "texto da legenda do post, sem markdown e sem emojis, '
+        'escrito de forma humana e natural", '
+        '"hashtags": ["lista", "de", "hashtags", "relevantes", "sem o caractere #"], '
+        '"ideia_visual": "descricao curta da imagem/video sugerido para o post"}'
+    ) % (contexto_negocio, tema)
+
+    resposta = client.messages.create(
+        model=MODEL,
+        max_tokens=600,
+        thinking={"type": "adaptive"},
+        output_config={"effort": "low"},
+        messages=[{"role": "user", "content": prompt}],
+    )
+
+    texto_final = ""
+    for bloco in resposta.content:
+        if bloco.type == "text":
+            texto_final += bloco.text
+
+    try:
+        inicio = texto_final.index("{")
+        fim = texto_final.rindex("}") + 1
+        return json.loads(texto_final[inicio:fim])
+    except Exception:
+        return {"legenda": texto_final.strip(), "hashtags": [], "ideia_visual": ""}

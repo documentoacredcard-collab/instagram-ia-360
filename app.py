@@ -33,6 +33,176 @@ def get_config():
     return storage.ler("config", NEGOCIO_PADRAO)
 
 
+# ---------------- Visual (tema escuro/verde ADGN) ----------------
+ESTILO_BASE = """
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+    background: #0a0a0a;
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(70,200,28,0.18), transparent 40%),
+      radial-gradient(circle at 85% 15%, rgba(70,200,28,0.12), transparent 40%),
+      radial-gradient(circle at 50% 100%, rgba(70,200,28,0.08), transparent 45%);
+    color: #eeeeee;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 800;
+    background: linear-gradient(180deg, #46c81c 0%, rgba(70,200,28,0.5) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+    text-shadow: 0 0 18px rgba(70,200,28,0.35);
+  }
+  header p { color: #a3a3a3; margin-top: 4px; }
+
+  .nav { margin-top: 14px; display: flex; gap: 10px; }
+  .nav a {
+    color: #6ddc2f;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 6px 16px;
+    border: 1px solid #1d3a22;
+    border-radius: 999px;
+    background: #0f1410;
+  }
+  .nav a.ativo { background: linear-gradient(135deg, #46c81c, #2f8a13); color: #07210e; border-color: transparent; }
+
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .kpi {
+    border-radius: 16px;
+    padding: 20px 22px;
+    box-shadow: 0 0 24px -6px currentColor, 0 8px 24px -8px rgba(0,0,0,0.7);
+    color: #07210e;
+  }
+  .kpi .valor { font-size: 32px; font-weight: 800; }
+  .kpi .label { color: rgba(7,33,14,0.75); font-size: 13px; margin-top: 4px; font-weight: 600; }
+  .kpi.azul { background: linear-gradient(135deg, #6ddc2f, #2f8a13); color: #07210e; }
+  .kpi.verde { background: linear-gradient(135deg, #46c81c, #2f8a13); color: #07210e; }
+  .kpi.roxo { background: linear-gradient(135deg, #8be33f, #5a9c1a); color: #11220a; }
+  .kpi.vermelho { background: linear-gradient(135deg, #ff5b5f, #c4222a); color: #240505; }
+
+  .graficos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .card {
+    background: #0f1410;
+    border: 1px solid #1d3a22;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 8px 24px -12px rgba(70,200,28,0.35);
+  }
+  .card h3 { margin: 0 0 12px; font-size: 15px; color: #6ddc2f; font-weight: 700; }
+  .card canvas { max-height: 220px; }
+
+  section h2 {
+    font-size: 18px;
+    margin: 32px 0 12px;
+    color: #cdebb0;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(70,200,28,0.25);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #0f1410;
+    border: 1px solid #1d3a22;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px -12px rgba(70,200,28,0.25);
+  }
+  th, td { padding: 10px 12px; text-align: left; font-size: 13px; border-bottom: 1px solid #162018; color: #eeeeee; }
+  th { background: #122016; color: #6ddc2f; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.04em; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #122016; }
+  td.vazio { text-align: center; color: #5b7a66; padding: 18px; }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .badge-lead_qualificado { background: linear-gradient(135deg, #46c81c, #2f8a13); color: #07210e; }
+  .badge-curioso { background: linear-gradient(135deg, #8be33f, #5a9c1a); color: #11220a; }
+  .badge-sem_interesse { background: linear-gradient(135deg, #ff5b5f, #c4222a); color: #240505; }
+  .badge-sim { background: linear-gradient(135deg, #46c81c, #2f8a13); color: #07210e; }
+  .badge-nao { background: #1d3a22; color: #a3a3a3; }
+  .badge-respondido { background: linear-gradient(135deg, #6ddc2f, #2f8a13); color: #07210e; }
+  .badge-excluido { background: linear-gradient(135deg, #ff5b5f, #c4222a); color: #240505; }
+
+  .form-criativo {
+    background: #0f1410;
+    border: 1px solid #1d3a22;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 8px 24px -12px rgba(70,200,28,0.35);
+    margin: 24px 0;
+  }
+  .form-criativo label { display: block; margin-bottom: 8px; color: #cdebb0; font-weight: 600; font-size: 14px; }
+  .form-criativo input[type=text] {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid #1d3a22;
+    background: #0a0a0a;
+    color: #eeeeee;
+    font-size: 14px;
+  }
+  .form-criativo button {
+    margin-top: 14px;
+    padding: 10px 22px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #46c81c, #2f8a13);
+    color: #07210e;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .criativo-card {
+    background: #0f1410;
+    border: 1px solid #1d3a22;
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: 0 8px 24px -12px rgba(70,200,28,0.25);
+  }
+  .criativo-card h4 { margin: 0 0 8px; color: #6ddc2f; font-size: 14px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .criativo-card p { margin: 0 0 10px; line-height: 1.5; }
+  .criativo-card .hashtags { color: #8be33f; font-size: 13px; }
+"""
+
+NAV_HTML = """
+<div class="nav">
+  <a href="/painel" class="%s">Painel</a>
+  <a href="/criativos" class="%s">Criativos</a>
+</div>
+"""
+
+
+def nav_html(ativo):
+    return NAV_HTML % (
+        "ativo" if ativo == "painel" else "",
+        "ativo" if ativo == "criativos" else "",
+    )
+
+
 # ---------------- Rotas basicas ----------------
 @app.route("/")
 def home():
@@ -169,110 +339,13 @@ def painel():
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <style>
-          * { box-sizing: border-box; }
-          body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 24px 16px 60px;
-            background: #0a0a0a;
-            background-image:
-              radial-gradient(circle at 15%% 0%%, rgba(70,200,28,0.18), transparent 40%%),
-              radial-gradient(circle at 85%% 15%%, rgba(70,200,28,0.12), transparent 40%%),
-              radial-gradient(circle at 50%% 100%%, rgba(70,200,28,0.08), transparent 45%%);
-            color: #eeeeee;
-          }
-          header h1 {
-            margin: 0;
-            font-size: 30px;
-            font-weight: 800;
-            background: linear-gradient(180deg, #46c81c 0%%, rgba(70,200,28,0.5) 100%%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            display: inline-block;
-            text-shadow: 0 0 18px rgba(70,200,28,0.35);
-          }
-          header p { color: #a3a3a3; margin-top: 4px; }
-
-          .kpis {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
-            margin: 24px 0;
-          }
-          .kpi {
-            border-radius: 16px;
-            padding: 20px 22px;
-            box-shadow: 0 0 24px -6px currentColor, 0 8px 24px -8px rgba(0,0,0,0.7);
-            color: #07210e;
-          }
-          .kpi .valor { font-size: 32px; font-weight: 800; }
-          .kpi .label { color: rgba(7,33,14,0.75); font-size: 13px; margin-top: 4px; font-weight: 600; }
-          .kpi.azul { background: linear-gradient(135deg, #6ddc2f, #2f8a13); color: #07210e; }
-          .kpi.verde { background: linear-gradient(135deg, #46c81c, #2f8a13); color: #07210e; }
-          .kpi.roxo { background: linear-gradient(135deg, #8be33f, #5a9c1a); color: #11220a; }
-          .kpi.vermelho { background: linear-gradient(135deg, #ff5b5f, #c4222a); color: #240505; }
-
-          .graficos {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 16px;
-            margin-bottom: 32px;
-          }
-          .card {
-            background: #0f1410;
-            border: 1px solid #1d3a22;
-            border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 8px 24px -12px rgba(70,200,28,0.35);
-          }
-          .card h3 { margin: 0 0 12px; font-size: 15px; color: #6ddc2f; font-weight: 700; }
-          .card canvas { max-height: 220px; }
-
-          section h2 {
-            font-size: 18px;
-            margin: 32px 0 12px;
-            color: #cdebb0;
-            font-weight: 700;
-            text-shadow: 0 0 10px rgba(70,200,28,0.25);
-          }
-          table {
-            width: 100%%;
-            border-collapse: collapse;
-            background: #0f1410;
-            border: 1px solid #1d3a22;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 8px 24px -12px rgba(70,200,28,0.25);
-          }
-          th, td { padding: 10px 12px; text-align: left; font-size: 13px; border-bottom: 1px solid #162018; color: #eeeeee; }
-          th { background: #122016; color: #6ddc2f; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.04em; }
-          tr:last-child td { border-bottom: none; }
-          tr:hover td { background: #122016; }
-          td.vazio { text-align: center; color: #5b7a66; padding: 18px; }
-
-          .badge {
-            display: inline-block;
-            padding: 3px 12px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 700;
-          }
-          .badge-lead_qualificado { background: linear-gradient(135deg, #46c81c, #2f8a13); color: #07210e; }
-          .badge-curioso { background: linear-gradient(135deg, #8be33f, #5a9c1a); color: #11220a; }
-          .badge-sem_interesse { background: linear-gradient(135deg, #ff5b5f, #c4222a); color: #240505; }
-          .badge-sim { background: linear-gradient(135deg, #46c81c, #2f8a13); color: #07210e; }
-          .badge-nao { background: #1d3a22; color: #a3a3a3; }
-          .badge-respondido { background: linear-gradient(135deg, #6ddc2f, #2f8a13); color: #07210e; }
-          .badge-excluido { background: linear-gradient(135deg, #ff5b5f, #c4222a); color: #240505; }
-        </style>
+        <style>%s</style>
       </head>
       <body>
         <header>
           <h1>Instagram IA 360</h1>
           <p>Painel de acompanhamento em tempo real.</p>
+          %s
         </header>
 
         <div class="kpis">
@@ -369,6 +442,8 @@ def painel():
       </body>
     </html>
     """ % (
+        ESTILO_BASE,
+        nav_html("painel"),
         total_leads,
         contagem_classificacao["lead_qualificado"],
         total_perfis_nicho,
@@ -377,6 +452,81 @@ def painel():
         linhas_nicho,
         linhas_comentarios,
         json.dumps(dados_grafico),
+    )
+
+    return html, 200
+
+
+@app.route("/criativos", methods=["GET", "POST"])
+def criativos():
+    """Gera ideias de post (legenda, hashtags e ideia visual) com IA a partir de um tema."""
+    criativos_dados = storage.ler("criativos", [])
+
+    if request.method == "POST":
+        tema = (request.form.get("tema") or "").strip()
+        if tema:
+            negocio = get_config()
+            resultado = ai_responder.gerar_criativo(tema, negocio)
+            criativos_dados.insert(0, {"tema": tema, "resultado": resultado})
+            if len(criativos_dados) > 50:
+                criativos_dados = criativos_dados[:50]
+            storage.gravar("criativos", criativos_dados)
+
+    cards_criativos = ""
+    for item in criativos_dados:
+        resultado = item.get("resultado") or {}
+        hashtags = resultado.get("hashtags") or []
+        hashtags_txt = " ".join("#%s" % h for h in hashtags)
+        cards_criativos += (
+            "<div class='criativo-card'>"
+            "<h4>Tema: %s</h4>"
+            "<p>%s</p>"
+            "<p class='hashtags'>%s</p>"
+            "<p><strong>Ideia visual:</strong> %s</p>"
+            "</div>"
+        ) % (
+            item.get("tema", ""),
+            resultado.get("legenda", ""),
+            hashtags_txt,
+            resultado.get("ideia_visual", ""),
+        )
+    if not cards_criativos:
+        cards_criativos = "<p class='vazio'>Nenhum criativo gerado ainda.</p>"
+
+    html = """
+    <html>
+      <head>
+        <title>Criativos - Instagram IA 360</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>%s</style>
+      </head>
+      <body>
+        <header>
+          <h1>Instagram IA 360</h1>
+          <p>Geracao de criativos para posts com IA.</p>
+          %s
+        </header>
+
+        <section>
+          <h2>Criar novo criativo</h2>
+          <form class="form-criativo" method="POST">
+            <label for="tema">Tema/assunto do post</label>
+            <input type="text" id="tema" name="tema" placeholder="Ex: dica rapida sobre o nosso servico" required>
+            <button type="submit">Gerar criativo</button>
+          </form>
+        </section>
+
+        <section>
+          <h2>Criativos gerados</h2>
+          %s
+        </section>
+      </body>
+    </html>
+    """ % (
+        ESTILO_BASE,
+        nav_html("criativos"),
+        cards_criativos,
     )
 
     return html, 200
