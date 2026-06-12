@@ -45,6 +45,19 @@ def send_message(igsid, texto):
         return {}
 
 
+def delete_comment(comment_id):
+    """Exclui um comentario (usado para comentarios negativos/ofensivos)."""
+    url = "%s/%s" % (GRAPH_URL, comment_id)
+    params = {"access_token": ACCESS_TOKEN}
+    try:
+        resp = requests.delete(url, params=params, timeout=15)
+        resp.raise_for_status()
+        return resp.json()
+    except Exception as e:
+        print("[ig_client] erro ao excluir comentario:", e)
+        return {}
+
+
 def send_private_reply(comment_id, texto):
     """Envia uma resposta privada (Direct) em reacao a um comentario."""
     url = "%s/me/messages" % GRAPH_URL

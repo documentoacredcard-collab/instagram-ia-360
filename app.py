@@ -196,6 +196,14 @@ def processar_comentario(valor):
     if comment_id in comentarios:
         return
 
+    # exclui comentarios negativos/ofensivos automaticamente
+    analise_sentimento = ai_responder.comentario_e_negativo(texto)
+    if analise_sentimento.get("negativo"):
+        ig_client.delete_comment(comment_id)
+        comentarios.append(comment_id)
+        storage.gravar("comentarios", comentarios[-500:])
+        return
+
     negocio = get_config()
     resposta = ai_responder.gerar_resposta_comentario(username, texto, negocio)
     ig_client.send_private_reply(comment_id, resposta)

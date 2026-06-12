@@ -178,6 +178,44 @@ def analisar_perfil_nicho(perfil, texto, negocio):
         }
 
 
+def comentario_e_negativo(comentario):
+    """
+    Avalia se um comentario publico e ofensivo, negativo ou spam,
+    para decidir se ele deve ser excluido automaticamente.
+
+    Retorna um dict: {"negativo": bool, "motivo": ...}
+    """
+    prompt = (
+        "Avalie o comentario abaixo, feito publicamente em um post do Instagram:\n"
+        "\"%s\"\n\n"
+        "Considere negativo apenas comentarios ofensivos, agressivos, com "
+        "discurso de odio, assedio, spam ou conteudo claramente prejudicial. "
+        "Criticas educadas ou opinioes neutras NAO sao negativas.\n\n"
+        "Responda APENAS com um JSON no formato:\n"
+        '{"negativo": true | false, "motivo": "breve justificativa"}'
+    ) % (comentario,)
+
+    resposta = client.messages.create(
+        model=MODEL,
+        max_tokens=200,
+        thinking={"type": "adaptive"},
+        output_config={"effort": "low"},
+        messages=[{"role": "user", "content": prompt}],
+    )
+
+    texto_final = ""
+    for bloco in resposta.content:
+        if bloco.type == "text":
+            texto_final += bloco.text
+
+    try:
+        inicio = texto_final.index("{")
+        fim = texto_final.rindex("}") + 1
+        return json.loads(texto_final[inicio:fim])
+    except Exception:
+        return {"negativo": False, "motivo": texto_final.strip()}
+
+
 def gerar_resposta_comentario(username, comentario, negocio):
     """
     Gera uma resposta privada (enviada para o Direct) em reacao a um

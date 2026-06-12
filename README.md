@@ -3,19 +3,24 @@
 Sistema separado e independente de automacao para Instagram (sem nenhuma ligacao
 com o RADAR EMPRESARIAL 360). Usa a API oficial da Meta (Instagram Messaging API).
 
-## Funcionalidade atual
+## Funcionalidades
 
 - **Responder DMs com mensagem personalizada (IA)**: quando alguem manda mensagem
   no Direct, o sistema busca o perfil de quem mandou, monta um historico da
   conversa e usa o Claude (Anthropic) para gerar uma resposta personalizada,
   enviando de volta automaticamente.
-
-## Funcionalidades futuras (planejadas)
-
-- Responder comentarios de Reels/Feed levando para o Direct
-- Qualificador de perfil de novos contatos
-- Rastreador de perfis do nicho
-- Exclusao automatica de comentarios negativos
+- **Comentarios -> Direct**: quando alguem comenta em um post/Reels, o sistema
+  envia uma resposta privada personalizada (IA) no Direct, convidando para
+  continuar a conversa por la.
+- **Qualificador de perfil de novos contatos**: na primeira mensagem de um
+  contato novo, a IA classifica o perfil (lead_qualificado, curioso,
+  sem_interesse) e o resultado pode ser consultado em `/leads`.
+- **Rastreador de perfis do nicho**: cada perfil que interage (DM ou
+  comentario) e analisado pela IA para indicar se pertence ao
+  nicho/publico-alvo do negocio, consultavel em `/perfis-nicho`.
+- **Exclusao automatica de comentarios negativos**: comentarios ofensivos,
+  com discurso de odio, assedio ou spam sao identificados pela IA e
+  excluidos automaticamente.
 
 ## Configuracao
 
